@@ -1,0 +1,133 @@
+@import 'shared',
+'variables';
+
+/*
+cursor-table sizing:
+By default, table height is 'auto' (height big enough to show all cursors).
+To constrain the size to show a specific number of rows, consumers can do:
+cursor-table {
+    --op-scatter-cursor-table-height: var(--op-scatter-cursor-table-constrained-height);
+    --op-scatter-cursor-table-visible-rows: [a number];
+}
+*/
+
+:host {
+    --op-scatter-cursor-table-height: auto;
+    --op-scatter-cursor-table-row-height: 4rem;
+    --op-scatter-cursor-table-collapsed-height: 2.6rem;
+    --op-scatter-cursor-table-expanded-height: calc(3.15rem +  var(--op-scatter-cursor-table-row-height) * var(--op-scatter-cursor-table-visible-rows));
+    --op-scatter-cursor-table-constrained-height: var(--op-scatter-cursor-table-collapsed-height);
+    min-height: var(--op-scatter-cursor-table-collapsed-height);
+}
+
+:host.expanded {
+    --op-scatter-cursor-table-constrained-height: var(--op-scatter-cursor-table-expanded-height);
+}
+
+:host, .cursor-table-container, dx-data-grid {
+    height: var(--op-scatter-cursor-table-height);
+    max-width: 100%;
+}
+
+dx-data-grid {
+    width: 100%;
+}
+
+::ng-deep {
+    .dx-datagrid-borders > .dx-datagrid-headers {
+        border: none;
+    }
+
+    .dx-datagrid-content .dx-datagrid-table .dx-row > td {
+        vertical-align: middle;
+    }
+
+    .dx-datagrid .dx-header-row > td {
+        padding-bottom: 0.4rem;
+    }
+
+    .dx-datagrid-rowsview .dx-row {
+        height: calc(var(--op-scatter-cursor-table-row-height) - 1px);
+    }
+
+    tr.dx-data-row:hover .showHideButton {
+        color: rgb(194, 189, 189);
+        &.closed {
+            color: rgb(129, 129, 129);
+        }
+    }
+
+    /*
+    CSS for the colored dot by the series name in each row. Works in conjunction
+    with onCellPrepared() which sets the CSS variable.
+    Note: We're not using column cellTemplate because that disables the built-in DxDataGrid
+    logic that shows a tooltip only when a cell's text gets ellipsized (which we want).
+    */
+    tr.dx-data-row td.series-name::before {
+        content: '\f111';
+        color: var(--op-scatter-cursor-row-series-color);
+        font-family: 'fontAwesome';
+        margin-right: 0.5rem;
+        font-size: 1rem;
+        vertical-align: middle;
+    }
+}
+
+.cursor-table-container {
+    position: relative;
+    display: flex;
+}
+
+.title-container {
+    position: absolute;
+    display: flex;
+    top: 0.4rem;
+    border: 1px solid lightgray;
+    color: gray;
+
+    &.title-container-collapsed {
+        position: relative;
+        left: 0;
+        top: 0;
+    }
+
+    .toggle-button {
+        @include toggle-button("\f0d8", "\f0d8");
+        width: 2rem;
+        height: 2rem;
+        left: 0.5rem;
+        top: 0.5rem;
+        color: gray;
+        display: flex;
+        padding: 0;
+        padding-left: 0.5rem;
+        transform: rotate(180deg);
+
+        &.closed {
+            transform: none;
+            border-right: 1px solid lightgray;
+            height: 2.4rem;
+            padding-top: 0.2rem;
+        }
+
+        &::before {
+            margin-top: -0.2rem;
+            margin-right: 0.5rem;
+        }
+    }
+
+    .title-text {
+        margin: 0.2rem 1rem 0.2rem 0.5rem;
+    }
+}
+
+.showHideButton {
+    @include toggle-button("\f06e", "\f070");
+    color: transparent;
+    width: 2.5rem;
+    height: 2.5rem;
+
+    &.closed {
+        color: rgb(129, 129, 129);
+    }
+}

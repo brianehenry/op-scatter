@@ -1,0 +1,429 @@
+@import 'variables';
+
+%full {
+  width: 100%;
+  height: 100%;
+}
+
+%setting-title {
+  display:block;
+  font-weight: 600;
+  z-index: 2;
+}
+
+%transitive-flex-container {
+  display: flex;
+  flex: 1;
+}
+
+%dashboard-header-button {
+  $normal-color: $subtext-color;
+  $button-icon-size: 2.2rem;
+  ::ng-deep {
+    .dx-menu-item-popout {
+      font-size: 0;
+    }
+    .dx-menu-item-text {
+      color: $normal-color;
+      font-size: 1.5rem;
+    }
+    .dx-menu-item-content:before {
+      content: "";
+      width: $button-icon-size;
+      height: $button-icon-size;
+      padding-left: $button-icon-size;
+      float: left;
+    }
+  }
+  &:hover, .is-shown & { /*is-shown is a css API to mark when the submenu is open */
+    ::ng-deep {
+      .dx-menu-item-text {
+        color: $secondary-lead;
+        cursor: pointer;
+      }
+      .dx-menu-item-content:before {
+        cursor: pointer;
+      }
+
+    }
+  }
+}
+
+%seperator-border {
+  border-bottom: .1rem solid $secondary-color;
+  padding-top: .3rem;
+  margin-right: 3rem;
+  margin-left: 3rem;
+}
+
+@mixin dashboard-header-button($normal-image, $hover-image) {
+  @extend %dashboard-header-button;
+  ::ng-deep .dx-menu-item-content:before {
+    background: $normal-image;
+  }
+
+  &:hover, .is-shown & { /*is-shown is a css API to mark when the submenu is open */
+    ::ng-deep .dx-menu-item-content:before {
+      background: $hover-image;
+    }
+  }
+}
+
+@mixin background-with-hover($url, $isAlwaysActive:false, $isCentered:'center center') {
+  @if ($isAlwaysActive) {
+    background: url(#{$url}-hover.svg) no-repeat #{$isCentered};
+  } @else {
+    background: url(#{$url}.svg) no-repeat #{$isCentered};
+  }
+  &:hover {
+    cursor: pointer;
+    background: url(#{$url}-hover.svg) no-repeat #{$isCentered};
+  }
+}
+
+@mixin delete-icon($appAssetsPath) {
+  display: none;
+  width: 1.7rem;
+  height: 1.7rem;
+  $path: $appAssetsPath + 'app-assets/delete-15';
+  @include background-with-hover($path);
+}
+
+/*---- Widgets ----*/
+%yAxisTitle {
+  flex: none;
+  width: 2rem;
+  white-space: nowrap;
+  transform: rotate(270deg);
+  font-size: $small-text;
+}
+
+%select-all {
+  position: absolute;
+  bottom: .2rem;
+  font-size: 1.2rem;
+}
+
+%border-hover {
+  border: .1rem solid $secondary-color;
+}
+
+/* ------ Popups ------*/
+%popup-button {
+  background-color: transparent;
+  text-align: center;
+  margin-top: 2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  box-shadow: none;
+  border: none;
+  cursor: pointer;
+  font-size: $big-text;
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.4;
+    cursor:not-allowed;
+  }
+}
+
+%popup-button-confirm {
+  @extend %popup-button;
+  color: $active-color;
+}
+
+%popup-button-cancel {
+  @extend %popup-button;
+  color: $title-color;
+}
+
+%popup-footer {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  .button-cancel {
+    @extend %popup-button-cancel;
+  }
+  .button-ok {
+    @extend %popup-button-confirm;
+  }
+}
+
+@mixin popup-footer($isReverse: true) {
+  @extend %popup-footer;
+  font-size: $big-text;
+  @if ($isReverse) {
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+  }
+}
+
+%menu-item-container {
+  display: flex;
+  @extend %full;
+  padding: $dx-submenu-item-padding;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  cursor: default;
+}
+
+%multiple-selection-title{
+  color: $big-title-color;
+  font-weight: bold;
+  font-size: $normal-text;
+  margin: 0;
+  margin-bottom: -1rem;
+}
+
+%absolute-popup {
+  position: absolute;
+  box-shadow: 0 0.1rem 0.3rem 0 rgba(63, 63, 68, 0.15), 0 0 0 0.1rem rgba(63, 63, 68, 0.05);
+  background-color: $component-general-color;
+  min-width: 17.3rem;
+  max-width: 50rem;
+  position: absolute;
+  right: 0;
+  width: fit-content;
+}
+
+%popup-menu-item {
+  .menu-item {
+    padding: 1.6rem 1.9rem 1.7rem 1.9rem;
+    border-top: .1rem solid $border-color;
+    width: 100%;
+    &.menu-title {
+      border-top: none;
+      font-weight: bold;
+    }
+    &.number-selected {
+      color: $active-color;
+      font-size: 1.2rem;
+      padding: 1rem 1.9rem 1rem 1.9rem;
+    }
+    .item-title {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      width: fit-content;
+      white-space: nowrap;
+      &:hover {
+        color: $active-color;
+      }
+    }
+    .question-mark-icon {
+      margin-left: 1rem;
+      padding-bottom: .2rem;
+    }
+  }
+}
+
+/* ------ highcharts ------*/
+.highcharts-container {
+  overflow: visible !important;
+}
+
+%highcharts-tooltip {
+  .tooltip-value {
+    color: $primary-color;
+  }
+  .highcharts-tooltip {
+    fill: $component-general-color;
+    z-index: 1;
+    .tooltip-row-wrapper {
+      text-align: justify;
+      background-color: $component-general-color;
+    }
+  }
+}
+
+%highcharts-axis-labels {
+  .axis-label {
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+    top: 0 !important;
+    .tooltiptext {
+      visibility: hidden;
+      @extend %tooltip;
+      text-align: left;
+      font-size: $extra-small-text;
+      position: absolute;
+      left: -2.5rem;
+      z-index: 100000;
+    }
+  }
+  .highcharts-xaxis-labels span {
+    overflow: visible !important;
+    white-space: nowrap !important;
+    font-size: $small-text !important;
+    text-align: center;
+    &:hover {
+      z-index: 20;
+    }
+  }
+  .highcharts-axis-title {
+    visibility: hidden;
+  }
+}
+
+%toggle-button {
+  padding: .2rem 0 .1rem 0;
+  background-color: transparent;
+  border: none;
+  color: $normal-color;
+  font-size: 1.5rem;
+  outline: none;
+  margin: 0;
+  &:before {
+    font-family: fontAwesome;
+  }
+}
+
+@mixin toggle-button($symbolClose: string,$symbolOpen:string) {
+  @extend %toggle-button;
+  &:before {
+    content: $symbolClose;
+  }
+  &.closed:before {
+    content: $symbolOpen;
+  }
+}
+
+%reset-zoom-button {
+  position: absolute;
+  z-index: 20;
+  right: 2rem;
+  top: 2rem;
+  color: $primary-color;
+  background-color: $reset-zoom;
+  border: .1rem solid $subtext-color;
+  border-radius: .2rem;
+  font-size: $small-text;
+  padding: .4rem .6rem;
+  &:hover {
+    color: $active-color;
+    border-color: lighten($active-color, 15%);
+  }
+}
+
+
+/*----- Utility ----*/
+
+@function str-replace($string, $search, $replace: '') {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+@function create-selector($list-items, $selector-template, $placeholder:'{item}') {
+  $selector: ();
+  @each $item in $list-items {
+    $selector: append($selector, unquote(str-replace($selector-template, $placeholder, #{$item})), 'comma');
+  }
+  @return $selector;
+}
+
+@mixin optional-at-root($sel) {
+  @at-root #{if(not &, $sel, selector-append(&, $sel))} {
+    @content;
+  }
+}
+
+@mixin placeholder {
+  @include optional-at-root('::placeholder') {
+    @content;
+  }
+}
+
+@function buildTransition($properties, $speed){
+  $result: ();
+  @each $property in $properties {
+    $factor: 1;
+    @if length($property) == 2 {
+      $factor: nth($property, 2);
+    }
+    $result: append($result, unquote('#{nth($property, 1)} #{$speed*$factor} linear'), 'comma');
+  }
+
+  @return $result;
+}
+
+%webkit-scroll{
+  &::-webkit-scrollbar {
+    width: 0.4rem;
+    padding: 0 1rem;
+    &:hover {
+      width: 1.1rem;
+    }
+  }
+  &::-webkit-scrollbar-track {
+    opacity: 0;
+    background-color: $light-background-color;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $subtext-color;
+    border-radius: 0;
+  }
+  &:hover {
+    ::-webkit-scrollbar-corner {
+      width: 1.1rem;
+    }
+  }
+}
+
+%tooltip {
+  background-color: $normal-color;
+  color: $component-general-color;
+  box-shadow: 0 0 0.2rem 0.1rem rgba(0, 0, 0, 0.1);
+  padding: 1.4rem;
+}
+
+%flex-centered-container {
+display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+%disabled-container {
+  opacity: 0.4;
+  pointer-events: none;
+  * {
+    pointer-events: none;
+  }
+}
+
+%text-input-field {
+    color: $primary-color;
+    font-family: $roboto-font;
+    border: 0;
+    padding: 0 0 0 0.25rem;
+    outline: 0;
+    line-height: 2.5rem;
+    border-bottom: 0.1rem solid $subtext-color;
+
+    &:focus {
+        border-bottom-color: $active-color;
+    }
+}
+
+%error-message {
+  font-size: $normal-text;
+  color: $error-color;
+}
+
+.highcharts-crosshair.highcharts-crosshair-category {
+  stroke: $system-background-color;
+}
+
+.dx-popup-bottom.dx-toolbar {
+  padding: 1rem 2rem;
+  border-top: .1rem solid $border-color;
+}
+
+%button-size{
+  width: 2.1rem;
+  height: 2.1rem;
+}

@@ -1,0 +1,33 @@
+<div class='cursor-table-container'>
+    <dx-data-grid
+        #grid
+        [style.display]="cursorTableExpanded ? 'block' : 'none'"
+        [dataSource]='cursorsInternal'
+        [allowColumnReordering]='true'
+        [allowColumnResizing]='true'
+        [showRowLines]='true'
+        [showColumnLines]='false'
+        columnResizingMode='nextColumn'
+        noDataText=""
+        [showBorders]='true'
+        (onCellPrepared)="onCellPrepared($event)"
+        (onContentReady)='onDataGridContentReady()'>
+        <dxi-column name='showHideCursor' cellTemplate='showHideCursorTemplate' [allowReordering]='false' alignment='left' width='35' minWidth='35'></dxi-column>
+        <dxi-column caption='Name' dataField='label' alignment='left' width='90' minWidth='90'></dxi-column>
+        <dxi-column caption="Series" cssClass='series-name' dataField='seriesName' alignment='left' minWidth='100'></dxi-column>
+        <dxi-column caption='X value' dataField='x' alignment='left' width='80' minWidth='30'></dxi-column>
+        <dxi-column caption='Y value' dataField='y' alignment='left' width='80' minWidth='30'></dxi-column>
+        <div *dxTemplate="let cellData of 'showHideCursorTemplate'">
+            <button (click)='showHideCursor(cellData)
+                '[ngClass]="{'showHideButton': true, 'closed': !cellData.data.visible}"></button>
+        </div>
+        <dxo-scrolling mode="standard"></dxo-scrolling>
+        <dxo-load-panel [enabled]="false"></dxo-load-panel>
+    </dx-data-grid>
+    <div class='title-container' [ngClass]="{'title-container-collapsed': !cursorTableExpanded}">
+        <button [ngClass]="{'closed':!cursorTableExpanded}" (click)='toggleCursorTable()'
+            class='toggle-button'>
+        </button>
+        <div *ngIf='!cursorTableExpanded' class='title-text' (click)='cursorTableExpanded=!cursorTableExpanded'>Cursor Table</div>
+    </div>
+</div>
